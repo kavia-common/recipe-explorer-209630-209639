@@ -1,48 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, lazy, useCallback, useEffect } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import { Header } from "./components/Header";
+import { useLocalStorageState } from "./hooks/useLocalStorageState";
+import { useDebouncedValue } from "./hooks/useDebouncedValue";
+
+const Home = lazy(() => import("./pages/Home"));
+const RecipeDetail = lazy(() => import("./pages/RecipeDetail"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 // PUBLIC_INTERFACE
 function App() {
-  const [theme, setTheme] = useState('light');
+  /** App entry with routes, retro layout, and global (persisted) search state. */
+  const [search, setSearch] = useLocalStorageState("recipe_app:last_search", "");
+  const debouncedSearch = useDebouncedValue(search, 250);
 
-  // Effect to apply theme to document element
+  const clearSearch = useCallback(() => setSearch(""), [setSearch]);
+
+  // Convenience: escape clears search when focus is in the search input.
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  // PUBLIC_INTERFACE
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-  };
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") clearSearch();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [clearSearch]);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+    <BrowserRouter>
+      <div className="app">
+        <Header
+          searchValue={search}
+          onSearchChange={setSearch}
+          onClearSearch={clearSearch}
+        />
+
+        <Suspense
+          fallback={
+            <main className="main" role="main">
+              <div className="container">
+                <div className="card panel">
+                  <h1 className="page-title">Loading…</h1>
+                  <p className="page-subtitle">Warming up the oven.</p>
+                </div>
+              </div>
+            </main>
+          }
         >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Routes>
+            <Route path="/" element={<Home debouncedSearch={debouncedSearch} />} />
+            <Route path="/recipes/:recipeId" element={<RecipeDetail />} />
+            <Route path="/home" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </div>
+    </BrowserRouter>
   );
 }
 

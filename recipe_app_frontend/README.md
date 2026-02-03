@@ -1,82 +1,47 @@
-# Lightweight React Template for KAVIA
+# Retro Recipe Explorer (Frontend-only)
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+A lightweight, frontend-only React recipe application with a retro-inspired (but modern) UI.
 
 ## Features
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+- Client-side routing with React Router:
+  - Home (recipe grid + search)
+  - Recipe detail pages
+  - 404 / Not Found
+- Prominent header search (debounced) that filters recipes client-side
+- Local seed recipe data (no backend needed)
+- Retro styling:
+  - soft gradients, subtle grain/grid background
+  - rounded corners, hover lift, focus rings
+- Accessible defaults:
+  - semantic HTML, labeled controls, keyboard-friendly navigation
 
-## Getting Started
+## Getting started
 
-In the project directory, you can run:
+From `recipe_app_frontend/`:
 
-### `npm start`
-
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-### `npm test`
-
-Launches the test runner in interactive watch mode.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-## Customization
-
-### Colors
-
-The main brand colors are defined as CSS variables in `src/App.css`:
-
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
+```bash
+npm start
 ```
 
-### Components
+Then open http://localhost:3000
 
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
+## Build
 
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
+```bash
+npm run build
+```
 
-## Learn More
+## Testing (note)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This template includes a basic test setup (CRA + Testing Library).
+No additional tests were requested for this task; if you add tests later, a good starting point is:
 
-### Code Splitting
+- unit tests for filtering/search logic
+- route-level rendering tests for `Home` and `RecipeDetail`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Run tests with:
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+npm test
+```
